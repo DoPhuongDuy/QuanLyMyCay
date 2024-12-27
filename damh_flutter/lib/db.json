@@ -1,6 +1,6 @@
 {
   "menu": {
-    "Mỳ cay": [
+    "noodle": [
       {
         "title": "Mì cay hải sản",
         "description": "Có các thành phần xúc xích, cá viên, tôm, mực",
@@ -26,7 +26,7 @@
         "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnlui3ef1Vy88V1A4lHVvmZvIXZDayyC32Ug&s"
       }
     ],
-    "Đồ ăn thêm": [
+    "sidefood": [
       {
         "title": "Cá viên luộc",
         "description": "Cá viên được luộc sẵn, gồm 5 viên",
@@ -52,23 +52,21 @@
         "imageUrl": "https://cdn.tgdd.vn//News/1534757//ca-vien-chien-bao-nhieu-calo-cach-an-ca-vien-13-800x450.jpg"
       }
     ],
-    "Đồ ăn nhẹ": [
+    "lightfood": [
       {
         "title": "Khoai tây chiên",
         "description": "Khoai tây chiên giòn, thơm ngon",
-        "sales": "200 đã bán",
         "price": "15.000đ",
         "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnoAtzQ_kRSfrB6tso2cYNrUuaPmjOLJXSRQ&s"
       },
       {
         "title": "Gà rán",
         "description": "Gà rán giòn rụm, ngọt thịt",
-        "sales": "180 đã bán",
         "price": "30.000đ",
         "imageUrl": "https://product.hstatic.net/200000605103/product/dui-ga-gion_b57cd7734a324493aa2df6ba941929eb_master.png"
       }
     ],
-    "Nước uống": [
+    "drink": [
       {
         "title": "Nước ngọt",
         "description": "Nước ngọt mát lạnh",
