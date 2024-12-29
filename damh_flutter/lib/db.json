@@ -1,84 +1,51 @@
 {
-  "menu": {
-    "noodle": [
-      {
-        "title": "Mì cay hải sản",
-        "description": "Có các thành phần xúc xích, cá viên, tôm, mực",
-        "price": "35.000đ",
-        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnlui3ef1Vy88V1A4lHVvmZvIXZDayyC32Ug&s"
-      },
-      {
-        "title": "Mì cay bò Waygu",
-        "description": "Có các thành phần xúc xích, thịt bò, bò viên, cá viên",
-        "price": "40.000đ",
-        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnlui3ef1Vy88V1A4lHVvmZvIXZDayyC32Ug&s"
-      },
-      {
-        "title": "Mì cay đùi gà",
-        "description": "Có các thành phần xúc xích, cá viên, đùi gà xé",
-        "price": "35.000đ",
-        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnlui3ef1Vy88V1A4lHVvmZvIXZDayyC32Ug&s"
-      },
-      {
-        "title": "Mì cay bò Úc",
-        "description": "Có các thành phần xúc xích, thịt bò, bò viên",
-        "price": "35.000đ",
-        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnlui3ef1Vy88V1A4lHVvmZvIXZDayyC32Ug&s"
-      }
-    ],
-    "sidefood": [
-      {
-        "title": "Cá viên luộc",
-        "description": "Cá viên được luộc sẵn, gồm 5 viên",
-        "price": "12.000đ",
-        "imageUrl": "https://cdn.tgdd.vn//News/1534757//ca-vien-chien-bao-nhieu-calo-cach-an-ca-vien-13-800x450.jpg"
-      },
-      {
-        "title": "Cá viên chiên",
-        "description": "Cá viên được chiên lên, gồm 5 viên",
-        "price": "14.000đ",
-        "imageUrl": "https://cdn.tgdd.vn//News/1534757//ca-vien-chien-bao-nhieu-calo-cach-an-ca-vien-13-800x450.jpg"
-      },
-      {
-        "title": "Bò viên luộc",
-        "description": "Bò viên được luộc lên, gồm 5 viên",
-        "price": "12.000đ",
-        "imageUrl": "https://cdn.tgdd.vn//News/1534757//ca-vien-chien-bao-nhieu-calo-cach-an-ca-vien-13-800x450.jpg"
-      },
-      {
-        "title": "Bò viên chiên",
-        "description": "Bò viên được chiên lên, gồm 5 viên",
-        "price": "14.000đ",
-        "imageUrl": "https://cdn.tgdd.vn//News/1534757//ca-vien-chien-bao-nhieu-calo-cach-an-ca-vien-13-800x450.jpg"
-      }
-    ],
-    "lightfood": [
-      {
-        "title": "Khoai tây chiên",
-        "description": "Khoai tây chiên giòn, thơm ngon",
-        "price": "15.000đ",
-        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnoAtzQ_kRSfrB6tso2cYNrUuaPmjOLJXSRQ&s"
-      },
-      {
-        "title": "Gà rán",
-        "description": "Gà rán giòn rụm, ngọt thịt",
-        "price": "30.000đ",
-        "imageUrl": "https://product.hstatic.net/200000605103/product/dui-ga-gion_b57cd7734a324493aa2df6ba941929eb_master.png"
-      }
-    ],
-    "drink": [
-      {
-        "title": "Nước ngọt",
-        "description": "Nước ngọt mát lạnh",
-        "price": "12.000đ",
-        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9tetX7bM-KFfBHsEBjahr2a3m9PfzOtRYPQ&s"
-      },
-      {
-        "title": "Trà sữa",
-        "description": "Trà sữa thơm ngon",
-        "price": "25.000đ",
-        "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLro0x-F5aknipUJxYv9cE3eOuctbuk6-Ymw&s"
-      }
-    ]
-  }
+  "users": [
+    {
+      "id": 1,
+      "username": "admin",
+      "password": "admin123"
+    }
+  ],
+  "tables": [
+    {
+      "id": 1,
+      "name": "Bàn 1",
+      "capacity": 4,
+      "isOccupied": false
+    },
+    {
+      "id": 2,
+      "name": "Bàn 2",
+      "capacity": 2,
+      "isOccupied": true
+    }
+  ],
+  "food": [
+    {
+      "id": 1,
+      "name": "Bánh mì",
+      "price": 20000,
+      "description": "Bánh mì nướng với pate",
+      "image": "https://example.com/images/banhmi.jpg"
+    },
+    {
+      "id": 2,
+      "name": "Coca-Cola",
+      "price": 10000,
+      "description": "Đồ uống có gas",
+      "image": "https://example.com/images/coca.jpg"
+    }
+  ],
+  "orders": [
+    {
+      "id": 1,
+      "tableId": 1,
+      "items": [
+        {"name": "Bánh mì", "quantity": 2, "price": 20000, "image": "https://example.com/images/banhmi.jpg"},
+        {"name": "Coca-Cola", "quantity": 1, "price": 10000, "image": "https://example.com/images/coca.jpg"}
+      ],
+      "totalAmount": 50000,
+      "orderDate": "2024-12-29T10:00:00"
+    }
+  ]
 }
