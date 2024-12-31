@@ -1,4 +1,6 @@
+// lib/pages/login_page.dart
 import 'package:flutter/material.dart';
+import '../widgets/custom_appbar.dart';  // Import CustomAppBar từ thư mục widgets
 
 class LoginPage extends StatefulWidget {
   @override
@@ -6,11 +8,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  // Các biến để lưu trữ thông tin người dùng nhập vào
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
-
-  // Biến để lưu thông báo lỗi khi đăng nhập không thành công
   String _errorMessage = '';
 
   // Hàm xử lý đăng nhập
@@ -18,12 +17,9 @@ class _LoginPageState extends State<LoginPage> {
     final username = _usernameController.text;
     final password = _passwordController.text;
 
-    // Kiểm tra thông tin người dùng, đây chỉ là ví dụ, bạn có thể thay thế bằng API thực tế
     if (username == 'admin' && password == 'admin123') {
-      // Nếu đăng nhập thành công, chuyển hướng đến trang khác (ví dụ: trang chính)
-      Navigator.pushReplacementNamed(context, '/home'); // Bạn cần định nghĩa đường dẫn '/home'
+      Navigator.pushReplacementNamed(context, '/home');
     } else {
-      // Nếu thông tin không hợp lệ, hiển thị thông báo lỗi
       setState(() {
         _errorMessage = 'Tên đăng nhập hoặc mật khẩu không đúng.';
       });
@@ -33,52 +29,85 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Đăng Nhập'),
-        backgroundColor: Colors.red,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Trường nhập tên người dùng
-            TextFormField(
-              controller: _usernameController,
-              decoration: InputDecoration(
-                labelText: 'Tên người dùng',
-                border: OutlineInputBorder(),
+      appBar: CustomAppBar(title: 'Đăng Nhập',), // Sử dụng CustomAppBar từ widgets
+      body: Center(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.all(16.0),
+          child: Card(
+            elevation: 12.0,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Tiêu đề
+                  Text(
+                    'Chào mừng trở lại!',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.redAccent),
+                  ),
+                  SizedBox(height: 40),
+
+                  // Trường nhập tên người dùng
+                  TextFormField(
+                    controller: _usernameController,
+                    decoration: InputDecoration(
+                      labelText: 'Tên người dùng',
+                      hintText: 'Nhập tên người dùng',
+                      prefixIcon: Icon(Icons.person, color: Colors.redAccent),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+
+                  // Trường nhập mật khẩu
+                  TextFormField(
+                    controller: _passwordController,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      labelText: 'Mật khẩu',
+                      hintText: 'Nhập mật khẩu',
+                      prefixIcon: Icon(Icons.lock, color: Colors.redAccent),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+
+                  // Thông báo lỗi nếu có
+                  if (_errorMessage.isNotEmpty)
+                    Container(
+                      padding: EdgeInsets.all(8.0),
+                      margin: EdgeInsets.only(bottom: 20),
+                      decoration: BoxDecoration(
+                        color: Colors.red[50],
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        _errorMessage,
+                        style: TextStyle(color: Colors.red, fontSize: 14),
+                      ),
+                    ),
+
+                  // Nút đăng nhập
+                  ElevatedButton(
+                    onPressed: _login,
+                    child: Text('Đăng nhập', style: TextStyle(fontSize: 16)),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.redAccent,
+                      padding: EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-            SizedBox(height: 20),
-
-            // Trường nhập mật khẩu
-            TextFormField(
-              controller: _passwordController,
-              obscureText: true, // Ẩn mật khẩu khi gõ
-              decoration: InputDecoration(
-                labelText: 'Mật khẩu',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            SizedBox(height: 20),
-
-            // Thông báo lỗi nếu đăng nhập không thành công
-            if (_errorMessage.isNotEmpty)
-              Text(
-                _errorMessage,
-                style: TextStyle(color: Colors.red),
-              ),
-            SizedBox(height: 20),
-
-            // Nút đăng nhập
-            ElevatedButton(
-              onPressed: _login,
-              child: Text('Đăng nhập'),
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.yellow),
-            ),
-          ],
+          ),
         ),
       ),
     );

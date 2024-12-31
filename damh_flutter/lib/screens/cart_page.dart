@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/orderitem.dart';
+import '../widgets/cart_item_tile.dart';
 
 class CartDetailsPage extends StatefulWidget {
   final List<OrderItem> cartItems;
@@ -16,6 +17,25 @@ class _CartDetailsPageState extends State<CartDetailsPage> {
     return widget.cartItems.fold(0.0, (sum, item) => sum + (item.price * item.quantity));
   }
 
+  // Hàm thay đổi số lượng món ăn trong giỏ hàng
+  void updateItemQuantity(int index, int delta) {
+    setState(() {
+      final item = widget.cartItems[index];
+      if (delta < 0 && item.quantity == 1) {
+        widget.cartItems.removeAt(index);
+      } else {
+        item.quantity += delta; // Tăng hoặc giảm số lượng
+      }
+    });
+  }
+
+  // Hàm xóa tất cả các món trong giỏ hàng
+  void clearCart() {
+    setState(() {
+      widget.cartItems.clear();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -23,10 +43,26 @@ class _CartDetailsPageState extends State<CartDetailsPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Tiêu đề giỏ hàng
-          Text(
-            'Giỏ Hàng',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          // Tiêu đề giỏ hàng và nút "Xóa tất cả" nằm ngang
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              TextButton(
+                onPressed: clearCart, // Xử lý khi nhấn vào nút "Xóa tất cả"
+                child: Text(
+                  'Xóa tất cả',
+                  style: TextStyle(fontSize: 15, color: Colors.red, fontWeight: FontWeight.bold),
+                ),
+              ),
+              Expanded(
+                child: Center(
+                  child: Text(
+                    'Giỏ Hàng',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+            ],
           ),
           SizedBox(height: 16),
           // Hiển thị danh sách món ăn trong giỏ hàng
@@ -35,47 +71,10 @@ class _CartDetailsPageState extends State<CartDetailsPage> {
               itemCount: widget.cartItems.length,
               itemBuilder: (context, index) {
                 final item = widget.cartItems[index];
-                return Card(
-                  margin: EdgeInsets.symmetric(vertical: 8),
-                  child: ListTile(
-                    leading: Image.network(item.image, width: 50, height: 50, fit: BoxFit.cover),
-                    title: Text(item.name),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Hiển thị số lượng với dấu cộng và dấu trừ
-                        Row(
-                          children: [
-                            IconButton(
-                              icon: Icon(Icons.remove),
-                              onPressed: () {
-                                // Giảm số lượng món ăn trong giỏ hàng
-                                setState(() {
-                                  if (item.quantity > 1) {
-                                    item.quantity--;
-                                  } else {
-                                    // Nếu số lượng bằng 1, xóa món ăn khỏi giỏ hàng
-                                    widget.cartItems.removeAt(index);
-                                  }
-                                });
-                              },
-                            ),
-                            Text('${item.quantity}', style: TextStyle(fontSize: 18)),
-                            IconButton(
-                              icon: Icon(Icons.add),
-                              onPressed: () {
-                                // Tăng số lượng món ăn trong giỏ hàng
-                                setState(() {
-                                  item.quantity++;
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                        Text('Giá: ${item.price * item.quantity} VND'),
-                      ],
-                    ),
-                  ),
+                return CartItemTile(
+                  item: item,
+                  onIncrease: () => updateItemQuantity(index, 1), // Tăng số lượng
+                  onDecrease: () => updateItemQuantity(index, -1), // Giảm số lượng
                 );
               },
             ),
