@@ -21,19 +21,42 @@ class _CartDetailsPageState extends State<CartDetailsPage> {
   void updateItemQuantity(int index, int delta) {
     setState(() {
       final item = widget.cartItems[index];
-      if (delta < 0 && item.quantity == 1) {
-        widget.cartItems.removeAt(index);
+      if (item.quantity + delta <= 0) {
+        widget.cartItems.removeAt(index); // Nếu số lượng <= 0 thì xóa món ăn khỏi giỏ hàng
       } else {
         item.quantity += delta; // Tăng hoặc giảm số lượng
       }
     });
   }
 
-  // Hàm xóa tất cả các món trong giỏ hàng
+  // Hàm xóa tất cả các món trong giỏ hàng với xác nhận
   void clearCart() {
-    setState(() {
-      widget.cartItems.clear();
-    });
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Xác nhận xóa giỏ hàng'),
+          content: Text('Bạn có chắc chắn muốn xóa tất cả các món trong giỏ hàng không?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Đóng hộp thoại
+              },
+              child: Text('Hủy'),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  widget.cartItems.clear(); // Xóa tất cả món trong giỏ hàng
+                });
+                Navigator.of(context).pop(); // Đóng hộp thoại sau khi xóa
+              },
+              child: Text('Xóa tất cả'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -50,7 +73,7 @@ class _CartDetailsPageState extends State<CartDetailsPage> {
               TextButton(
                 onPressed: clearCart, // Xử lý khi nhấn vào nút "Xóa tất cả"
                 child: Text(
-                  'Xóa tất cả',
+                  widget.cartItems.isEmpty ? 'Giỏ hàng trống' : 'Xóa tất cả',  // Hiển thị tùy thuộc vào trạng thái giỏ hàng
                   style: TextStyle(fontSize: 15, color: Colors.red, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -90,3 +113,4 @@ class _CartDetailsPageState extends State<CartDetailsPage> {
     );
   }
 }
+

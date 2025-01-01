@@ -67,7 +67,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       bottomNavigationBar: BottomAppBar(
         color: Color(0xFFDF3E12),
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: EdgeInsets.all(8.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -75,12 +75,12 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 icon: Stack(
                   clipBehavior: Clip.none,
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.shopping_cart,
                       color: Colors.white,
                       size: 30,
                     ),
-                    if (cartItems.isNotEmpty)
+                    if (cartItems.isNotEmpty)  // Chỉ hiển thị số lượng nếu có sản phẩm trong giỏ hàng
                       Positioned(
                         right: -10,
                         top: -10,
@@ -88,7 +88,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                           radius: 12,
                           backgroundColor: Colors.red,
                           child: Text(
-                            '${cartItems.length}',
+                            '${cartItems.length}',  // Hiển thị số lượng sản phẩm trong giỏ
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 12,
@@ -102,7 +102,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 onPressed: () {
                   showModalBottomSheet(
                     context: context,
-                    builder: (context) => CartDetailsPage(cartItems: cartItems),
+                    builder: (context) => CartDetailsPage(cartItems: cartItems),  // Hiển thị giỏ hàng với dữ liệu mới
                   );
                 },
               ),
