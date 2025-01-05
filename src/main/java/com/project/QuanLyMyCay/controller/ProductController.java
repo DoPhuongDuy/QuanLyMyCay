@@ -26,13 +26,14 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
+@CrossOrigin
 @RequestMapping("${api.prefix}/products")
 @RequiredArgsConstructor
 public class ProductController {
 
     private final ProductService productService;
 
-    @PostMapping()
+    @PostMapping("/create")
     public ResponseEntity<String> addProduct(
             @Valid @ModelAttribute ProductDTO productDTO,
             BindingResult result) {
@@ -74,19 +75,19 @@ public class ProductController {
         }
     }
 
-    @GetMapping()
+    @GetMapping(value = "/get-all", produces = "application/json;charset=UTF-8")
     public ResponseEntity<List<Product>> getAllProducts() {
         List<Product> products = productService.getAllProduct();
         return ResponseEntity.ok(products);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable long id) {
-        Product product = productService.getProductById(id);
-        return ResponseEntity.ok(product);
+    @GetMapping("/category/{id}")
+    public ResponseEntity<List<Product>> getProductByCategoryId(@PathVariable long id) {
+        List<Product> products = productService.getProductByCategoryId(id);
+        return ResponseEntity.ok(products);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<Product> updateProduct(
             @PathVariable long id,
             @Valid @RequestBody ProductDTO productDTO,
@@ -125,7 +126,7 @@ public class ProductController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable long id) {
         productService.deleteProduct(id);
         return ResponseEntity.ok("Product with ID " + id + " has been deleted successfully.");

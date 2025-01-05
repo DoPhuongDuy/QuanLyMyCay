@@ -3,7 +3,9 @@ package com.project.QuanLyMyCay.service.implementation;
 import com.project.QuanLyMyCay.dtos.CategoryDTO;
 import com.project.QuanLyMyCay.entity.Category;
 import com.project.QuanLyMyCay.entity.Product;
+import com.project.QuanLyMyCay.exception.AlreadyExistsException;
 import com.project.QuanLyMyCay.exception.DataNotFoundException;
+import com.project.QuanLyMyCay.exception.DataSaveException;
 import com.project.QuanLyMyCay.mapper.CategoryMapper;
 import com.project.QuanLyMyCay.repository.CategoryRepository;
 import com.project.QuanLyMyCay.repository.ProductRepository;
@@ -38,7 +40,7 @@ public class CategoryServiceImpl implements CategoryService {
     public Category createCategory(CategoryDTO categoryDTO) {
         // Kiểm tra xem Category có trùng tên không trước khi tạo mới
         if (categoryRepository.existsByName(categoryDTO.getName())) {
-            throw new IllegalArgumentException("Category with name '" + categoryDTO.getName() + "' already exists");
+            throw new AlreadyExistsException("Category with name '" + categoryDTO.getName() + "' already exists");
         }
 
         Category newCategory = categoryMapper.toEntity(categoryDTO);
@@ -51,7 +53,7 @@ public class CategoryServiceImpl implements CategoryService {
         // Kiểm tra tên Category mới có khác tên cũ không
         if (!existingCategory.getName().equals(categoryDTO.getName())) {
             if (categoryRepository.existsByName(categoryDTO.getName())) {
-                throw new IllegalArgumentException("Category with name '" + categoryDTO.getName() + "' already exists");
+                throw new AlreadyExistsException("Category with name '" + categoryDTO.getName() + "' already exists");
             }
             existingCategory.setName(categoryDTO.getName());
             return categoryRepository.save(existingCategory);
@@ -64,7 +66,7 @@ public class CategoryServiceImpl implements CategoryService {
         // Kiểm tra xem có sản phẩm nào tham chiếu đến loại này không
         List<Product> products = productRepository.findByCategoryId(id);
         if (!products.isEmpty()) {
-            throw new DataIntegrityViolationException("Cannot delete category, products are referencing it.");
+            throw new DataSaveException("Cannot delete category, products are referencing it.");
         }
         // Nếu không có sản phẩm nào, xóa loại
         Category category = getCategoryById(id);

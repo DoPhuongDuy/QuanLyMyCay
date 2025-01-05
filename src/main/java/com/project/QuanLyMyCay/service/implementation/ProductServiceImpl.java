@@ -79,4 +79,12 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findById(id)
                 .orElseThrow(() -> new DataNotFoundException("Sản phẩm không tồn tại"));
     }
+
+    @Override
+    public List<Product> getProductByCategoryId(long categoryId) {
+        if(!categoryRepository.existsById(categoryId)){
+            throw new DataNotFoundException("Loại không tồn tại");
+        }
+        return productRepository.findByCategoryId(categoryId);
+    }
 }

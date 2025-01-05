@@ -15,13 +15,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@CrossOrigin
 @RequestMapping("${api.prefix}/categories")
 @RequiredArgsConstructor
 public class CategoryController {
 
     private final CategoryService categoryService;
 
-    @PostMapping()
+    @PostMapping("/create")
     public ResponseEntity<Category> createCategory(
             @Valid @RequestBody CategoryDTO categoryDTO,
             BindingResult result) {
@@ -38,19 +39,19 @@ public class CategoryController {
         return ResponseEntity.ok(newCategory);
     }
 
-    @GetMapping()
+    @GetMapping(value = "/get-all", produces = "application/json;charset=UTF-8")
     public ResponseEntity<List<Category>> getAllCategories() {
         List<Category> categories = categoryService.getAllCategory();
         return ResponseEntity.ok(categories);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/get/{id}")
     public ResponseEntity<Category> getCategoryById(@PathVariable long id) {
         Category category = categoryService.getCategoryById(id);
         return ResponseEntity.ok(category);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<Category> updateCategoryById(
             @PathVariable long id,
             @Valid @RequestBody CategoryDTO categoryDTO) {
@@ -58,7 +59,7 @@ public class CategoryController {
         return ResponseEntity.ok(updateCategory);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteCategoryById(@PathVariable long id) {
         categoryService.deleteCategoryById(id);
         return ResponseEntity.ok("deleteByCategoryId " + id);
