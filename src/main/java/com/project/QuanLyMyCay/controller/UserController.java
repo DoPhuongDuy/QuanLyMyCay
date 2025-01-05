@@ -3,6 +3,7 @@ package com.project.QuanLyMyCay.controller;
 import com.project.QuanLyMyCay.dtos.UserDTO;
 import com.project.QuanLyMyCay.dtos.UserLoginDTO;
 import com.project.QuanLyMyCay.entity.User;
+import com.project.QuanLyMyCay.exception.DataValidationException;
 import com.project.QuanLyMyCay.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,24 +32,17 @@ public class UserController {
                     .stream()
                     .map(FieldError::getDefaultMessage)
                     .collect(Collectors.joining(", "));
-            throw new IllegalArgumentException(errorMessages);
+            throw new DataValidationException(errorMessages);
         }
 
         // Kiểm tra mật khẩu và nhập lại mật khẩu
-        if(!userDTO.getPassword().equals(userDTO.getGetRetype_password())){
+        if(!userDTO.getPassword().equals(userDTO.getRetype_password())){
             return ResponseEntity.badRequest().body("Password doesn't match");
         }
+        userDTO.setActive(true);
 
         userService.createUser(userDTO);
         return ResponseEntity.ok("Register successfully"+userDTO);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(
-            @PathVariable("id") long id
-    ){
-        User existingUser = userService.getUserById(id);
-        return ResponseEntity.ok(existingUser);
     }
 
     @PostMapping("/login")

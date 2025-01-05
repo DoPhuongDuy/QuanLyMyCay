@@ -7,9 +7,9 @@ spring:
     username: root
     password:
   jpa:
-    show-sql: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: none # options: none, validate, update, create, create-drop
+    show-sql: false
     properties:
       hibernate:
       dialect: org.hibernate.dialect.MySQL8Dialect
@@ -21,3 +21,6 @@ spring:
 
 api:
   prefix: api/v1
+jwt:
+  expiration: 86400   #1day = 1*24*60*60
+  secretkey: U29tZVZhbGlkQ2hhcmFjdGVySG9sZGVyW0FsaWdlMjYwMTJGb3JQZXJpbmY=

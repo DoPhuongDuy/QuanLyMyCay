@@ -9,11 +9,12 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Category {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // ID tự động sinh
-    private long id; // Tương ứng với `serial`
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
-    @Column(name = "name", nullable = false, length = 50, unique = true)
-    private String name; // Tương ứng với varchar(64)
+    @Column(name = "name", nullable = false, length = 100, unique = true) // VARCHAR(100), NOT NULL, UNIQUE
+    private String name;
 }

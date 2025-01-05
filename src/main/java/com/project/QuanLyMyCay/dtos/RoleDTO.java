@@ -12,8 +12,9 @@ import lombok.*;
 @Setter
 public class RoleDTO {
 
-    @NotEmpty(message = "Role name cannot be empty")
-    @Size(max = 64, message = "Role name must not exceed 64 characters")
-    private String name; // Tương ứng với varchar(64)
+    private long id;
 
+    @NotEmpty(message = "Role name cannot be empty")
+    @Size(max = 64, message = "Role name must not exceed 64 characters") // Tương ứng với VARCHAR(64)
+    private String name;
 }

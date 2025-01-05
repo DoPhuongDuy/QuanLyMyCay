@@ -7,15 +7,16 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class CategoryMapper {
-    public CategoryDTO toDto(Category category) {
+    public CategoryDTO toDTO(Category category) {
         return CategoryDTO.builder()
+                .id(category.getId())
                 .name(category.getName())
                 .build();
     }
 
     public Category toEntity(CategoryDTO categoryDTO) {
-        Category category = new Category();
-        category.setName(categoryDTO.getName());
-        return category;
+        return Category.builder()
+                .name(categoryDTO.getName())
+                .build();
     }
 }
