@@ -31,20 +31,20 @@ public class RoleController {
         return ResponseEntity.ok(roles);
     }
     @GetMapping("/{id}")
-    public ResponseEntity<Role> getRoleById(@PathVariable Long id){
+    public ResponseEntity<Role> getRoleById(@PathVariable("id") long id){
         Role role =  roleService.getRoleById(id);
         return ResponseEntity.ok(role);
     }
     @PutMapping("/{id}")
     public ResponseEntity<String> updateRoleById(
-            @PathVariable Long id,
+            @PathVariable("id") long id,
             @Valid @RequestBody RoleDTO roleDTO
     ){
         roleService.updateRoleById(id,roleDTO);
         return ResponseEntity.ok("updateByRoleById "+id);
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteByRoleById(@PathVariable Long id){
+    public ResponseEntity<String> deleteByRoleById(@PathVariable("id") long id){
         roleService.deleteRoleById(id);
         return ResponseEntity.ok("deleteByRoleById "+id);
     }

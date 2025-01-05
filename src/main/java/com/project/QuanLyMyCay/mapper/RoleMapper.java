@@ -7,15 +7,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class RoleMapper {
 
-    public RoleDTO toDto(Role role) {
+    public RoleDTO toDTO(Role role) {
         return RoleDTO.builder()
                 .name(role.getName())
                 .build();
     }
 
     public Role toEntity(RoleDTO roleDTO) {
-        Role role = new Role();
-        role.setName(roleDTO.getName());
-        return role;
+        return Role.builder()
+                .name(roleDTO.getName())
+                .build();
     }
 }

@@ -1,10 +1,7 @@
 package com.project.QuanLyMyCay.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name ="roles")
@@ -12,12 +9,12 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Role {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // ID tự động sinh
-    private long id; // Tương ứng với `serial`
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
-    @Column(name = "name", nullable = false, length = 50, unique = true)
-    private String name; // Tương ứng với varchar(64)
-
+    @Column(name = "name", nullable = false, length = 64, unique = true) // VARCHAR(64), NOT NULL, UNIQUE
+    private String name;
 }

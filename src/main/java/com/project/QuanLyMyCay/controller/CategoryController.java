@@ -2,6 +2,7 @@ package com.project.QuanLyMyCay.controller;
 
 import com.project.QuanLyMyCay.dtos.CategoryDTO;
 import com.project.QuanLyMyCay.entity.Category;
+import com.project.QuanLyMyCay.exception.DataValidationException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import com.project.QuanLyMyCay.service.CategoryService;
@@ -23,43 +24,43 @@ public class CategoryController {
     @PostMapping()
     public ResponseEntity<Category> createCategory(
             @Valid @RequestBody CategoryDTO categoryDTO,
-            BindingResult result){
+            BindingResult result) {
         // Kiểm tra nếu có lỗi trong dữ liệu đầu vào
         if (result.hasErrors()) {
             String errorMessages = result.getFieldErrors()
                     .stream()
                     .map(FieldError::getDefaultMessage)
                     .collect(Collectors.joining(", "));
-            throw new IllegalArgumentException(errorMessages);
+            throw new DataValidationException(errorMessages);
         }
 
-        Category newCategory =  categoryService.createCategory(categoryDTO);
+        Category newCategory = categoryService.createCategory(categoryDTO);
         return ResponseEntity.ok(newCategory);
     }
 
     @GetMapping()
-    public ResponseEntity<List<Category>> getAllCategories(){
-
-        List<Category> categories =  categoryService.getAllCategory();
+    public ResponseEntity<List<Category>> getAllCategories() {
+        List<Category> categories = categoryService.getAllCategory();
         return ResponseEntity.ok(categories);
     }
+
     @GetMapping("/{id}")
-    public ResponseEntity<Category> getCategoryById(@PathVariable Long id){
-        Category category =  categoryService.getCategoryById(id);
+    public ResponseEntity<Category> getCategoryById(@PathVariable long id) {
+        Category category = categoryService.getCategoryById(id);
         return ResponseEntity.ok(category);
     }
+
     @PutMapping("/{id}")
     public ResponseEntity<Category> updateCategoryById(
-            @PathVariable Long id,
-            @Valid @RequestBody CategoryDTO categoryDTO
-    ){
-        Category updateCategory = categoryService.updateCategoryById(id,categoryDTO);
+            @PathVariable long id,
+            @Valid @RequestBody CategoryDTO categoryDTO) {
+        Category updateCategory = categoryService.updateCategoryById(id, categoryDTO);
         return ResponseEntity.ok(updateCategory);
     }
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteCategoryById(@PathVariable Long id){
-        categoryService.deleteCategoryById(id);
-        return ResponseEntity.ok("deleteByRoleById "+id);
-    }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteCategoryById(@PathVariable long id) {
+        categoryService.deleteCategoryById(id);
+        return ResponseEntity.ok("deleteByCategoryId " + id);
+    }
 }
