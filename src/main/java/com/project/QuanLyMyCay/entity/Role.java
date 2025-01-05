@@ -17,4 +17,7 @@ public class Role {
 
     @Column(name = "name", nullable = false, length = 64, unique = true) // VARCHAR(64), NOT NULL, UNIQUE
     private String name;
+
+    public static String ADMIN = "ADMIN";
+    public static String USER = "USER";
 }

@@ -65,14 +65,17 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             }
             filterChain.doFilter(request,response);//cho di qua
         } catch (Exception e) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "");
         }
     }
 
     private boolean isByPassToken(@NonNull HttpServletRequest request){
         final List<Pair<String, String>> byPassTokens = Arrays.asList(
                 Pair.of(String.format("%s/users/register",apiPrefix),"POST"),
-                Pair.of(String.format("%s/users/login",apiPrefix),"POST")
+                Pair.of(String.format("%s/users/login",apiPrefix),"POST"),
+                Pair.of(String.format("%s/categories/get-all",apiPrefix),"GET"),
+                Pair.of(String.format("%s/products/get-all",apiPrefix),"GET"),
+                Pair.of(String.format("%s/products/category/{id}",apiPrefix),"GET")
         );
         for(Pair<String,String> byPassToken: byPassTokens){
             if(request.getServletPath().contains(byPassToken.getFirst()) &&

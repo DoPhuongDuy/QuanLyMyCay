@@ -1,5 +1,7 @@
 package com.project.QuanLyMyCay.configuration;
 
+import com.project.QuanLyMyCay.components.JwtTokenFilter;
+import com.project.QuanLyMyCay.entity.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -10,11 +12,15 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.CorsConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static org.springframework.http.HttpMethod.*;
+import static org.springframework.http.HttpMethod.DELETE;
 
 
 @Configuration
@@ -25,13 +31,42 @@ public class WebSecurityConfig {
     @Value("${api.prefix}")
     private String apiPrefix;
 
-//    private final JwtTokenFilter jwtTokenFilter;
+    private final JwtTokenFilter jwtTokenFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
          http
+                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
                  .authorizeHttpRequests(request -> {
-                     request.requestMatchers("**").permitAll();
+                     request.requestMatchers(
+                                     String.format("%s/users/register",apiPrefix),
+                                     String.format("%s/users/login",apiPrefix),
+                                     String.format("%s/categories/get-all",apiPrefix),
+                                     String.format("%s/products/get-all",apiPrefix),
+                                     String.format("%s/products/category/{id}",apiPrefix)
+                             )
+                             .permitAll()
+                             //ADMIN
+                             .requestMatchers(POST,
+                                     String.format("%s/categories/create",apiPrefix),
+                                     String.format("%s/products/create",apiPrefix)
+                             ).hasRole(Role.ADMIN)
+//                             .requestMatchers(GET,
+//                                     String.format("%s/categories/{id}",apiPrefix)
+//                             ).hasRole(Role.ADMIN)
+                             .requestMatchers(PUT,
+                                     String.format("%s/categories/update/{id}",apiPrefix),
+                                     String.format("%s/products/update/{id}",apiPrefix)
+                             ).hasRole(Role.ADMIN)
+                             .requestMatchers(DELETE,
+                                     String.format("%s/categories/delete/{id}",apiPrefix),
+                                     String.format("%s/products/delete/{id}",apiPrefix)
+                             ).hasRole(Role.ADMIN)
+
+                             //User
+                             .requestMatchers(GET,
+                                     String.format("%s/roles/**",apiPrefix)).hasRole(Role.USER)
+                             .anyRequest().authenticated();
                  })
                  .csrf(AbstractHttpConfigurer::disable);
          http.cors(new Customizer<CorsConfigurer<HttpSecurity>>() {

@@ -5,6 +5,7 @@ import com.project.QuanLyMyCay.dtos.UserDTO;
 import com.project.QuanLyMyCay.entity.Role;
 import com.project.QuanLyMyCay.entity.User;
 import com.project.QuanLyMyCay.exception.AlreadyExistsException;
+import com.project.QuanLyMyCay.exception.DataNotFoundException;
 import com.project.QuanLyMyCay.exception.DataValidationException;
 import com.project.QuanLyMyCay.mapper.UserMapper;
 import com.project.QuanLyMyCay.repository.UserRepository;
@@ -50,7 +51,7 @@ public class UserServiceImpl implements UserService {
     public User getUserById(long id){
         try{
             return  userRepository.findById(id)
-                    .orElseThrow(()->new DateTimeException("User Not Found with id "+id));
+                    .orElseThrow(()->new DataNotFoundException("User Not Found with id "+id));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
