@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../models/food.dart';
+import '../models/product.dart';
 
 class FoodTile extends StatelessWidget {
-  final Food food;
-  final Function(Food) addToCart;
+  final Product food;
+  final Function(Product) addToCart;
 
   const FoodTile({required this.food, required this.addToCart});
 

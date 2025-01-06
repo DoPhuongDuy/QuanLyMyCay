@@ -1,5 +1,5 @@
 // import 'package:flutter/material.dart';
-// import '../models/orderitem.dart';
+// import '../models/cartitem.dart';
 //
 // class FoodDetailPage extends StatelessWidget {
 //   final OrderItem orderItem;

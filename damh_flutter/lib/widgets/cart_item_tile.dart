@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../models/orderitem.dart';
+import '../models/cartitem.dart';
 
 class CartItemTile extends StatelessWidget {
-  final OrderItem item;
+  final CartItem item;
   final Function() onIncrease;
   final Function() onDecrease;
 

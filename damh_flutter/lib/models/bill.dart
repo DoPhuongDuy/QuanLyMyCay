@@ -6,7 +6,7 @@ class Bill {
 
   Bill({required this.id, required this.orderId, required this.totalAmount, required this.dateIssued});
 
-  factory Bill.fromJson(Map<String, dynamic> json) {
+    factory Bill.fromJson(Map<String, dynamic> json) {
     return Bill(
       id: json['id'],
       orderId: json['orderId'],
