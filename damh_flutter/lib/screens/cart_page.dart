@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../models/orderitem.dart';
+import '../models/cartitem.dart';
 import '../widgets/cart_item_tile.dart';
 
 class CartDetailsPage extends StatefulWidget {
-  final List<OrderItem> cartItems;
+  final List<CartItem> cartItems;
 
   CartDetailsPage({required this.cartItems});
 

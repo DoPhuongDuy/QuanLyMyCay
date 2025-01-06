@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../models/food.dart';
+import '../models/product.dart';
 import '../services/order_service.dart';
-import '../models/orderitem.dart';
+import '../models/cartitem.dart';
 import '../widgets/food_tile.dart';
 import '../widgets/custom_appbar.dart'; // Import CustomAppBar
 import 'cart_page.dart';
@@ -12,20 +12,44 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
-  late Future<List<Food>> foodItems;
-  List<OrderItem> cartItems = [];
+  late Future<List<Product>> foodItems;
+  List<CartItem> cartItems = [];
   late TabController _tabController;
 
   @override
   void initState() {
     super.initState();
     foodItems = OrderService().getFoodItems();
-    _tabController = TabController(length: 4, vsync: this); // Tạo TabController với 4 tab
+    _tabController =
+        TabController(length: 4, vsync: this); // Tạo TabController với 4 tab
   }
 
-  void addToCart(Food food) {
+  void addToCart(Product food) {
     setState(() {
-      cartItems.add(OrderItem(id: food.id, name: food.name, quantity: 1, price: food.price, image: food.image));
+      // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
+      bool productExists = false;
+
+      // Nếu sản phẩm đã có trong giỏ hàng, tăng số lượng
+      for (var cartItem in cartItems) {
+        if (cartItem.id == food.id) {
+          // Tăng số lượng của món ăn trong giỏ
+          cartItem.quantity++;
+          productExists = true;
+          break;
+        }
+      }
+
+      // Nếu sản phẩm chưa có trong giỏ, thêm mới vào giỏ
+      if (!productExists) {
+        cartItems.add(CartItem(
+          id: food.id,
+          name: food.name,
+          quantity: 1,  // Mới thêm sẽ có số lượng là 1
+          price: food.price,
+          image: food.image,
+          category: food.category,
+        ));
+      }
     });
   }
 
@@ -40,8 +64,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             // TabBar
             TabBar(
               controller: _tabController,
-              labelColor: Color(0xFFDF3E12), // Màu chữ của tab
-              unselectedLabelColor: Color(0xFF1A1A1A), // Màu chữ khi chưa chọn
+              labelColor: Color(0xFFDF3E12),
+              unselectedLabelColor: Color(0xFF1A1A1A),
               tabs: [
                 Tab(text: 'Mì cay'),
                 Tab(text: 'Đồ ăn thêm'),
@@ -49,6 +73,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 Tab(text: 'Nước uống'),
               ],
             ),
+
             // Nội dung của TabBarView
             Expanded(
               child: TabBarView(
@@ -80,7 +105,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                       color: Colors.white,
                       size: 30,
                     ),
-                    if (cartItems.isNotEmpty)  // Chỉ hiển thị số lượng nếu có sản phẩm trong giỏ hàng
+                    if (cartItems
+                        .isNotEmpty) // Chỉ hiển thị số lượng nếu có sản phẩm trong giỏ hàng
                       Positioned(
                         right: -10,
                         top: -10,
@@ -88,7 +114,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                           radius: 12,
                           backgroundColor: Colors.red,
                           child: Text(
-                            '${cartItems.length}',  // Hiển thị số lượng sản phẩm trong giỏ
+                            '${cartItems.length}',
+                            // Hiển thị số lượng sản phẩm trong giỏ
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 12,
@@ -102,7 +129,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 onPressed: () {
                   showModalBottomSheet(
                     context: context,
-                    builder: (context) => CartDetailsPage(cartItems: cartItems),  // Hiển thị giỏ hàng với dữ liệu mới
+                    builder: (context) =>
+                        CartDetailsPage(
+                            cartItems: cartItems), // Hiển thị giỏ hàng với dữ liệu mới
                   );
                 },
               ),
@@ -123,8 +152,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   }
 
   // Hàm hiển thị nội dung của từng tab
-  Widget _buildMenuTab(String title) {
-    return FutureBuilder<List<Food>>(
+  Widget _buildMenuTab(String categoryName) {
+    return FutureBuilder<List<Product>>(
       future: foodItems,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -135,11 +164,17 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           return Center(child: Text('Không có món ăn nào'));
         } else {
           final foods = snapshot.data!;
+
+          // Lọc món ăn theo loại (categoryName)
+          List<Product> filteredFoods = foods.where((food) {
+            return food.category.name == categoryName;
+          }).toList();
+
           return ListView.builder(
-            itemCount: foods.length,
+            itemCount: filteredFoods.length,
             itemBuilder: (context, index) {
               return FoodTile(
-                food: foods[index],
+                food: filteredFoods[index],
                 addToCart: addToCart,
               );
             },
@@ -149,3 +184,4 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     );
   }
 }
+
