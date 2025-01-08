@@ -1,5 +1,6 @@
 import 'package:damh4/model/Login.dart';
 import 'package:flutter/material.dart';
+import '../Test/RoleService.dart';
 import '/Test/service.dart';
 import 'Custom/CustomAppBar.dart';
 import 'Custom/CustomButton.dart';
@@ -16,6 +17,8 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
+  final RoleService roleService = RoleService();
 
   Service service = Service();
 
@@ -101,7 +104,17 @@ class _LoginScreenState extends State<LoginScreen> {
                   String result = await service.loginUser(login);
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result)));
                   if (result == 'Đăng nhập thành công') {
-                    Navigator.pushReplacementNamed(context, '/home');
+                    String? role = await roleService.getRoleByToken();
+                    if (role == 'ADMIN') {
+                      Navigator.pushReplacementNamed(context, '/admin');
+                    } else if (role == 'USER') {
+                      Navigator.pushReplacementNamed(context, '/home');
+                    } else if (role == 'KITCHEN') {
+                      Navigator.pushReplacementNamed(context, '/kitchen');
+                    } else {
+                      print('Undefined role');
+                      Navigator.pushReplacementNamed(context, '/login');
+                    }
                   }
                 }
               },

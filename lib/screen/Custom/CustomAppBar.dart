@@ -6,21 +6,21 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   const CustomAppBar({super.key, required this.title});
 
+  Future<String?> getToken() async {
+    const storage = FlutterSecureStorage();
+    return await storage.read(key: 'token'); // Lấy token từ Secure Storage
+  }
+
   Future<void> logout(BuildContext context) async {
     const storage = FlutterSecureStorage();
     await storage.delete(key: 'token'); // Xóa token khỏi Secure Storage
     Navigator.pushReplacementNamed(context, '/login'); // Điều hướng về trang đăng nhập
   }
 
-  Future<bool> hasToken() async {
-    const storage = FlutterSecureStorage();
-    String? token = await storage.read(key: 'token');
-    return token != null; // Kiểm tra xem có token hay không
-  }
-
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      leading: null,
       title: Text(
         title,
         style: const TextStyle(
@@ -29,14 +29,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       actions: [
-        FutureBuilder<bool>(
-          future: hasToken(), // Kiểm tra xem có token hay không
-          builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const CircularProgressIndicator(); // Hiển thị vòng tròn tải khi đang kiểm tra
-            } else if (snapshot.hasError) {
-              return Icon(Icons.error); // Hiển thị lỗi nếu có
-            } else if (snapshot.data == true) {
+        FutureBuilder<String?>(
+          future: getToken(), // Kiểm tra token
+          builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
+             if (snapshot.data != null) {
+              // Nếu có token, hiển thị PopupMenuButton
               return PopupMenuButton(
                 icon: ClipOval(
                   child: Image.asset(

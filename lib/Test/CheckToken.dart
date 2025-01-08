@@ -6,14 +6,11 @@ class CheckToken {
   final Service _service = Service();  // Service để lấy token
 
   // Kiểm tra token khi màn hình được tải
-  Future<void> checkToken(BuildContext context, Function fetchData) async {
+  Future<void> checkToken(BuildContext context) async {
     String? token = await _service.getToken(); // Lấy token từ Service
     if (token == null) {
       // Nếu không có token, điều hướng đến màn hình đăng nhập
       Navigator.pushReplacementNamed(context, '/login');
-    } else {
-      // Nếu có token, gọi fetchData
-      fetchData();
     }
   }
 
