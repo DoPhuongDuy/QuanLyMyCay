@@ -53,6 +53,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                     && SecurityContextHolder.getContext().getAuthentication() == null){
                 User userDetails = (User) userDetailsService.loadUserByUsername(account);
                 if(jwtTokenUtil.valiadteToken(token,userDetails)){
+                    request.setAttribute("userId", userDetails.getId());
+                    request.setAttribute("roleName", userDetails.getRole().getName());
                     UsernamePasswordAuthenticationToken authenticationToken =
                             new UsernamePasswordAuthenticationToken(
                                     userDetails,
@@ -75,7 +77,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 Pair.of(String.format("%s/users/login",apiPrefix),"POST"),
                 Pair.of(String.format("%s/categories/get-all",apiPrefix),"GET"),
                 Pair.of(String.format("%s/products/get-all",apiPrefix),"GET"),
-                Pair.of(String.format("%s/products/category/{id}",apiPrefix),"GET")
+                Pair.of(String.format("%s/products/images/", apiPrefix),"GET"),
+                Pair.of(String.format("%s/spice-levels/get-all",apiPrefix),"GET")
         );
         for(Pair<String,String> byPassToken: byPassTokens){
             if(request.getServletPath().contains(byPassToken.getFirst()) &&

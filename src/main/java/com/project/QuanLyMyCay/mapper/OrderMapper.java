@@ -25,6 +25,8 @@ public class OrderMapper {
                 .invoice(orderDTO.getInvoice())
                 .totalMoney(orderDTO.getTotalMoney())
                 .note(orderDTO.getNote())
+                .isActive(orderDTO.isActive())
+                .isDone(orderDTO.isDone())
                 .user(user)  // Gán User cho Order
                 .build();
     }
