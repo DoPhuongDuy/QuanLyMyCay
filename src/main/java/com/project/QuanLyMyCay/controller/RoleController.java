@@ -3,7 +3,9 @@ package com.project.QuanLyMyCay.controller;
 
 import com.project.QuanLyMyCay.dtos.RoleDTO;
 import com.project.QuanLyMyCay.entity.Role;
+import com.project.QuanLyMyCay.exception.DataValidationException;
 import com.project.QuanLyMyCay.service.RoleService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +21,7 @@ public class RoleController {
 
     private final RoleService roleService;
 
-    @PostMapping()
+    @PostMapping("/create")
     public ResponseEntity<String> createRole(@Valid @RequestBody RoleDTO roleDTO){
         Role newRole =  roleService.createRole(roleDTO);
         return ResponseEntity.ok("createRole");
@@ -31,7 +33,16 @@ public class RoleController {
         List<Role> roles =  roleService.getAllRoles();
         return ResponseEntity.ok(roles);
     }
-    @GetMapping("/{id}")
+    @GetMapping("/token")
+    public ResponseEntity<String> getRoleByToken(HttpServletRequest request){
+        String roleName = (String) request.getAttribute("roleName");
+        if (roleName != null) {
+            return ResponseEntity.ok(roleName);
+        } else {
+            throw new DataValidationException("User ID is missing or invalid");
+        }
+    }
+    @GetMapping("/get/{id}")
     public ResponseEntity<Role> getRoleById(@PathVariable("id") long id){
         Role role =  roleService.getRoleById(id);
         return ResponseEntity.ok(role);

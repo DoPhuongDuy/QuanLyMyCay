@@ -22,7 +22,7 @@ public class SpiceLevelController {
 
     private final SpiceLevelService spiceLevelService;
 
-    @PostMapping()
+    @PostMapping("/create")
     public ResponseEntity<SpiceLevel> createSpiceLevel(
             @Valid @RequestBody SpiceLevelDTO spiceLevelDTO,
             BindingResult result) {
@@ -39,19 +39,19 @@ public class SpiceLevelController {
         return ResponseEntity.ok(newSpiceLevel);
     }
 
-    @GetMapping()
+    @GetMapping("/get-all")
     public ResponseEntity<List<SpiceLevel>> getAllSpiceLevels() {
         List<SpiceLevel> spiceLevels = spiceLevelService.getAllSpiceLevels();
         return ResponseEntity.ok(spiceLevels);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/get/{id}")
     public ResponseEntity<SpiceLevel> getSpiceLevelById(@PathVariable long id) {
         SpiceLevel spiceLevel = spiceLevelService.getSpiceLevelById(id);
         return ResponseEntity.ok(spiceLevel);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<SpiceLevel> updateSpiceLevelById(
             @PathVariable long id,
             @Valid @RequestBody SpiceLevelDTO spiceLevelDTO) {
@@ -59,7 +59,7 @@ public class SpiceLevelController {
         return ResponseEntity.ok(updatedSpiceLevel);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteSpiceLevelById(@PathVariable long id) {
         spiceLevelService.deleteSpiceLevelById(id);
         return ResponseEntity.ok("deleteBySpiceLevelId " + id);

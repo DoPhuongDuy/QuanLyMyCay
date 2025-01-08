@@ -25,7 +25,9 @@ public class OrderDTO {
     private long userId;
 
     @NotNull(message = "orderDetailDTOS cannot be null")
-    private List<OrderDetailDTO> orderDetailDTOS;
+    private List<OrderDetailDTO> orderDetails;
 
     private boolean isActive;
+
+    private boolean isDone;
 }

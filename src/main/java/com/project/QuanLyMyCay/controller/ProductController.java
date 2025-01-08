@@ -6,6 +6,7 @@ import com.project.QuanLyMyCay.exception.DataValidationException;
 import com.project.QuanLyMyCay.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -81,9 +82,12 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
-    @GetMapping("/category/{id}")
-    public ResponseEntity<List<Product>> getProductByCategoryId(@PathVariable long id) {
+    @GetMapping(value = "/category/{id}", produces = "application/json;charset=UTF-8")
+    public ResponseEntity<List<Product>> getProductsByCategoryId(@PathVariable("id") long id) {
         List<Product> products = productService.getProductByCategoryId(id);
+        if (products.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
         return ResponseEntity.ok(products);
     }
 
@@ -106,7 +110,7 @@ public class ProductController {
                 // Kiểm tra kích thước file
                 if (file.getSize() > 10 * 1024 * 1024) { // Kích thước > 10MB
                     throw new ResponseStatusException(
-                            HttpStatus.PAYLOAD_TOO_LARGE, "File is too large! Maximum file size is 10MB.");
+                            HttpStatus.PAYLOAD_TOO_LARGE, "File is  too large! Maximum file size is 10MB.");
                 }
 
                 // Kiểm tra định dạng file
@@ -132,6 +136,32 @@ public class ProductController {
         return ResponseEntity.ok("Product with ID " + id + " has been deleted successfully.");
     }
 
+    @GetMapping("/images/{imageName}")
+    public ResponseEntity<?> viewImage(@PathVariable String imageName) {
+        try {
+            // Xây dựng đường dẫn đến tệp hình ảnh
+            java.nio.file.Path imagePath = Paths.get("uploads/" + imageName);
+
+            // Tạo đối tượng UrlResource từ đường dẫn
+            UrlResource resource = new UrlResource(imagePath.toUri());
+
+            // Kiểm tra nếu tệp hình ảnh tồn tại
+            if (resource.exists()) {
+                // Trả về hình ảnh với loại nội dung là IMAGE_JPEG
+                return ResponseEntity.ok()
+                        .contentType(MediaType.IMAGE_JPEG)
+                        .body(resource);
+            } else {
+                // Trả về mã lỗi 404 nếu hình ảnh không tìm thấy
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            // Trả về mã lỗi 404 nếu có lỗi xảy ra
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
     private String storeFile(MultipartFile file) throws IOException {
         // Lấy tên file và tạo tên duy nhất
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
@@ -140,11 +170,13 @@ public class ProductController {
         // Đường dẫn lưu trữ file
         Path uploadDir = Paths.get("uploads");
         if (!Files.exists(uploadDir)) {
-            Files.createDirectories(uploadDir);
+            Files.createDirectories(uploadDir);  // Tạo thư mục nếu chưa tồn tại
         }
 
-        // Đường dẫn đích
-        Path destination = Paths.get(uploadDir.toString(), uniqueFilename);
+        // Log đường dẫn đích
+        Path destination = uploadDir.resolve(uniqueFilename);
+
+        // Lưu tệp vào thư mục đích
         Files.copy(file.getInputStream(), destination, StandardCopyOption.REPLACE_EXISTING);
 
         // Trả về tên file đã được lưu

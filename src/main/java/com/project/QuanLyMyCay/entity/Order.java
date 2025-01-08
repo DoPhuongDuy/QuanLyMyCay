@@ -36,6 +36,9 @@ public class Order {
     @Column(name = "is_active", nullable = false, columnDefinition = "TINYINT DEFAULT 1") // Default = 1
     private boolean isActive;
 
+    @Column(name = "is_done", nullable = false, columnDefinition = "TINYINT DEFAULT 1") // Default = 1
+    private boolean isDone;
+
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderDetail> orderDetails = new ArrayList<>();
 }

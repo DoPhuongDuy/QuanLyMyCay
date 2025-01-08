@@ -3,6 +3,8 @@ package com.project.QuanLyMyCay.service.implementation;
 import com.project.QuanLyMyCay.dtos.OrderDTO;
 import com.project.QuanLyMyCay.entity.Order;
 import com.project.QuanLyMyCay.entity.OrderDetail;
+import com.project.QuanLyMyCay.entity.Response.OrderDetailResponse;
+import com.project.QuanLyMyCay.entity.Response.OrderResponse;
 import com.project.QuanLyMyCay.entity.User;
 import com.project.QuanLyMyCay.exception.DataNotFoundException;
 import com.project.QuanLyMyCay.exception.DataSaveException;
@@ -14,6 +16,7 @@ import com.project.QuanLyMyCay.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,8 +30,41 @@ public class OrderServiceImpl implements OrderService {
     private final OrderDetailRepository orderDetailRepository; // Thêm repository để tìm kiếm orderDetails
 
     @Override
-    public List<Order> getAllOrders() {
-        return orderRepository.findAll();
+    public List<OrderResponse> getAllOrders() {
+        List<Order> orders = orderRepository.findAll();
+        List<OrderResponse> orderResponses = new ArrayList<>();
+
+        for (Order order : orders) {
+            OrderResponse orderResponse = new OrderResponse();
+            orderResponse.setId(order.getId());
+            orderResponse.setInvoice(order.getInvoice());
+            orderResponse.setTotalMoney(order.getTotalMoney());
+            orderResponse.setNote(order.getNote());
+
+            List<OrderDetailResponse> orderDetailResponses = new ArrayList<>();
+            for (OrderDetail orderDetail : order.getOrderDetails()) {
+                OrderDetailResponse orderDetailResponse = new OrderDetailResponse();
+                orderDetailResponse.setNote(orderDetail.getNote());
+                orderDetailResponse.setNumberOfProducts(orderDetail.getNumberOfProducts());
+                orderDetailResponse.setTotalMoney(orderDetail.getTotalMoney());
+                orderDetailResponse.setProduct(orderDetail.getProduct()); // Đây là phần liên kết tới Product
+                orderDetailResponse.setSpiceLevel(orderDetail.getSpiceLevel().getId());
+
+                orderDetailResponses.add(orderDetailResponse);
+            }
+            orderResponse.setOrderDetails(orderDetailResponses);
+            orderResponses.add(orderResponse);
+        }
+
+        return orderResponses;
+    }
+
+    @Override
+    public List<Order> getAllOrdersActive(long id) {
+        if(id == 0){
+            return orderRepository.findByIsActive(false);
+        }
+        return orderRepository.findByIsActive(true);
     }
 
     @Override

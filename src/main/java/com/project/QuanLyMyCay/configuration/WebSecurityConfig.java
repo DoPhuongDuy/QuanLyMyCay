@@ -43,7 +43,7 @@ public class WebSecurityConfig {
                                      String.format("%s/users/login",apiPrefix),
                                      String.format("%s/categories/get-all",apiPrefix),
                                      String.format("%s/products/get-all",apiPrefix),
-                                     String.format("%s/products/category/{id}",apiPrefix)
+                                     String.format("%s/spice-levels/get-all",apiPrefix)
                              )
                              .permitAll()
                              //ADMIN
@@ -52,7 +52,7 @@ public class WebSecurityConfig {
                                      String.format("%s/products/create",apiPrefix)
                              ).hasRole(Role.ADMIN)
 //                             .requestMatchers(GET,
-//                                     String.format("%s/categories/{id}",apiPrefix)
+//                                     String.format("%s/products/category/{id}", apiPrefix)
 //                             ).hasRole(Role.ADMIN)
                              .requestMatchers(PUT,
                                      String.format("%s/categories/update/{id}",apiPrefix),
@@ -65,7 +65,17 @@ public class WebSecurityConfig {
 
                              //User
                              .requestMatchers(GET,
-                                     String.format("%s/roles/**",apiPrefix)).hasRole(Role.USER)
+                                     String.format("%s/orders/get-all-active",apiPrefix)).hasRole(Role.KITCHEN)
+                             //
+                             .requestMatchers(GET,
+                                     String.format("%s/products/images/*", apiPrefix),
+                                     String.format("%s/roles/token",apiPrefix),
+                                     String.format("%s/products/category/{id}", apiPrefix)
+                             ).permitAll()
+                             // cho 3 thang
+                             .requestMatchers(POST,
+                                     String.format("%s/orders/create", apiPrefix)
+                             ).hasAnyRole(Role.ADMIN, Role.USER, Role.KITCHEN)
                              .anyRequest().authenticated();
                  })
                  .csrf(AbstractHttpConfigurer::disable);
